@@ -19,7 +19,7 @@ Resources:
     Properties:
       FunctionName: MyNestApp
       Code:
-        ImageUri: ${AWS::AccountId}.dkr.ecr.us-east-1.amazonaws.com/my-private-repo:latest
+        ImageUri: !Sub "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/my-private-repo:latest"
       PackageType: Image
       Timeout: 30
       Role: !GetAtt MyLambdaExecutionRole.Arn
@@ -48,11 +48,24 @@ Resources:
           IntegrationHttpMethod: POST
           Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${MyNestAppFunction.Arn}/invocations"
 
+  RootApiGatewayMethod:
+      Type: AWS::ApiGateway::Method
+      Properties:
+        RestApiId: !Ref MyApiGateway
+        ResourceId: !GetAtt MyApiGateway.RootResourceId
+        HttpMethod: ANY
+        AuthorizationType: NONE
+        Integration:
+          Type: AWS_PROXY
+          IntegrationHttpMethod: POST
+          Uri: !Sub "arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${MyNestAppFunction.Arn}/invocations"
+
   MyApiGatewayDeployment:
       Type: AWS::ApiGateway::Deployment
       Properties:
         RestApiId: !Ref MyApiGateway
       DependsOn:
+        - RootApiGatewayMethod
         - MyApiGatewayMethod
 
   MyApiGatewayStage:

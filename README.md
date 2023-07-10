@@ -8,11 +8,13 @@ A minimal [NestJS](https://github.com/nestjs/nest) example that can be deployed 
 
 2. Build the Docker image and push it to The ecr registry you just created:
 
+Replace `your_repo_name` with your preferred repo name. In our exampel [ecr.yml](./ecr.yml) I named `my-private-repo`.
+
 ```bash
-aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <your_aws_account_id>.dkr.ecr.us-east-1.amazonaws.com
-docker build -t my-private-repo .
-docker tag test:latest 100209637061.dkr.ecr.us-east-1.amazonaws.com/test:latest
-docker tag test:latest 100209637061.dkr.ecr.us-east-1.amazonaws.com/test:latest
+aws ecr get-login-password --region <your-aws-region> | docker login --username AWS --password-stdin <your_aws_account_id>.dkr.ecr.us-east-1.amazonaws.com
+docker build -t <your_repo_name> .
+docker tag <your_repo_name>:latest <your_aws_account_id>.dkr.ecr.<your-aws-region>.amazonaws.com/<your_repo_name>:latest
+docker tag <your_repo_name>:latest <your_aws_account_id>.dkr.ecr.<your-aws-region>.amazonaws.com/<your_repo_name>:latest
 ```
 
 3. Create the actual Lambda + ApiGateway stack, by using the CloudFormation template [cf.yml](./cf.yml).

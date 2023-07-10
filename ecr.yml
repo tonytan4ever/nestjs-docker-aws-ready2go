@@ -15,4 +15,4 @@ Resources:
               - 'ecr:BatchCheckLayerAvailability'
             Condition:
               ArnEquals:
-                'aws:SourceArn': arn:aws:iam::${AWS::AccountId}:root
+                'aws:SourceArn': !Sub "arn:aws:iam::${AWS::AccountId}:root"

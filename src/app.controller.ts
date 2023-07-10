@@ -9,6 +9,11 @@ export class AppController {
     getHealth(): string {
       return 'Health check passed!';
     }
+	
+    @Get('/')
+    getHome(): string {
+      return 'Access from root url';
+    }
 
     @Get('/hello')
     getHello(): string {
